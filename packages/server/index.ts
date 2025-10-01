@@ -1,13 +1,54 @@
-import express, { type Request, type Response } from "express";
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import compression from "compression";
+import { config } from "./src/config/env";
+import { connectDB } from "./src/config/database";
+import { apiRoutes } from "./src/routes";
+import { errorHandler } from "./src/middleware/errorHandler";
 
 const app = express();
 
-const port = process.env.PORT || 3000;
+// Security middleware
+app.use(helmet());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello world!");
+app.use(compression());
+app.use(cors());
+app.use(express.json({ limit: "10mb" }));
+
+// Health check
+app.get("/health", (_req, res) => {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+  });
 });
 
-app.listen(port, () => {
-  console.log("Server started at 3000 port");
+// API routes
+app.use("/api", apiRoutes);
+
+// Error handling
+app.use(errorHandler);
+
+// 404 handler
+app.use((_req, res) => {
+  res.status(404).json({
+    success: false,
+    error: "Route not found",
+  });
 });
+
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    app.listen(config.port, () => {
+      console.log(`Server running on port ${config.port}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
