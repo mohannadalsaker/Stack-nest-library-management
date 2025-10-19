@@ -15,7 +15,7 @@ export const login = async (loginData: LoginInput) => {
   const foundUser = await User.findOne({ email: loginData.email });
   if (!foundUser || !(await foundUser.comparePassword(loginData.password)))
     throw new Error("Invalid credentials");
-
+  0;
   return foundUser;
 };
 

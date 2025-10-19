@@ -6,6 +6,7 @@ import { config } from "./src/config/env";
 import { connectDB } from "./src/config/database";
 import { apiRoutes } from "./src/routes";
 import { errorHandler } from "./src/middleware/errorHandler";
+import path from "path";
 
 const app = express();
 
@@ -29,6 +30,8 @@ app.use("/api", apiRoutes);
 
 // Error handling
 app.use(errorHandler);
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // 404 handler
 app.use((_req, res) => {
