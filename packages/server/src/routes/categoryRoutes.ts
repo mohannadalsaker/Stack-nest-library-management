@@ -14,7 +14,7 @@ router.post(
   validate(createCategorySchema),
   categoryController.createCategory
 );
-router.post(
+router.put(
   "/:id",
   validate(updateCategorySchema),
   categoryController.updatedCategory
