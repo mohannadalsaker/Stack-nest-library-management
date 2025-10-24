@@ -13,7 +13,7 @@ const UserDeleteDialog = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <DeleteDialogCard name={data?.data?.username!} />
+      <DeleteDialogCard name={data?.data?.user.username!} />
       <div className="flex justify-end gap-3">
         <PrimaryButton
           title="Cancel"

@@ -1,4 +1,4 @@
-import { TextField } from "@/shared/components";
+import { SelectInput, TextField } from "@/shared/components";
 import PrimaryButton from "@/shared/components/PrimaryButton";
 import { Loader } from "@/shared/ui";
 import { useUserForm } from "../hooks";
@@ -13,6 +13,7 @@ const UserForm = () => {
     isCreating,
     isUpdating,
     openEditId,
+    rolesOptions,
   } = useUserForm();
 
   if (isLoadingCategory) return <Loader />;
@@ -38,20 +39,23 @@ const UserForm = () => {
             />
           </div>
           <div className="flex gap-6">
-            <TextField
-              label="Password"
-              placeholder="Enter password"
-              error={errors.password?.message}
-              isRequired
-              {...register("password")}
-            />
-            {/* <TextField
+            {!openEditId && (
+              <TextField
+                label="Password"
+                placeholder="Enter password"
+                error={errors.password?.message}
+                isRequired
+                {...register("password")}
+              />
+            )}
+            <SelectInput
               label="Role"
-              placeholder="Enter role"
+              options={rolesOptions}
+              placeholder="Select role"
               error={errors.role?.message}
               isRequired
               {...register("role")}
-            /> */}
+            />
           </div>
         </div>
         <div className="flex justify-end gap-3">

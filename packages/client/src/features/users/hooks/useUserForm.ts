@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useUpdateUser } from "../api/useUpdateUser";
 import { useCreateUser } from "../api/useCreateUser";
+import { UserRoles } from "@/shared/types";
 
 export const useUserForm = () => {
   const { openEditId, closeDialog } = useDialogStore();
@@ -20,22 +21,23 @@ export const useUserForm = () => {
     formState: { errors },
     reset,
     handleSubmit,
+    setError,
   } = useForm<UserFormInput>({
     resolver: zodResolver(UserFormSchema),
     defaultValues: {
       username: "",
       email: "",
       password: "",
-      role: undefined,
+      role: UserRoles.dataEntry,
     },
   });
 
   useEffect(() => {
     if (data)
       reset({
-        username: data.data.username,
-        email: data.data.email,
-        role: undefined,
+        username: data.data.user.username,
+        email: data.data.user.email,
+        role: data.data.user.role,
       });
   }, [data]);
 
@@ -52,15 +54,36 @@ export const useUserForm = () => {
           },
         }
       );
-    } else
+    } else {
+      if (!data.password) {
+        setError("password", {
+          message: "Password must be at least 8 characters",
+        });
+      }
       createUser(data, {
         onSuccess: () => {
           closeDialog();
         },
       });
+    }
   };
 
   const sendForm = handleSubmit(onSubmit);
+
+  const rolesOptions = [
+    {
+      label: "Admin",
+      value: UserRoles.admin,
+    },
+    {
+      label: "Data Entry",
+      value: UserRoles.dataEntry,
+    },
+    {
+      label: "Archiver",
+      value: UserRoles.archiver,
+    },
+  ];
 
   return {
     sendForm,
@@ -72,5 +95,6 @@ export const useUserForm = () => {
     isUpdating,
     isLoadingCategory,
     openEditId,
+    rolesOptions,
   };
 };

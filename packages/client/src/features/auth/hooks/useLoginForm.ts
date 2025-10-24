@@ -31,7 +31,7 @@ export const useLoginForm = () => {
       onSuccess: (res) => {
         authenticate();
         setLsValue("token", res?.data?.token);
-        navigate("/products", { replace: true });
+        navigate("/", { replace: true });
       },
     });
   };

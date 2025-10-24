@@ -26,3 +26,9 @@ export interface ApiResponse<T> {
 export interface PaginatedApiResponse<T> {
   data: { data: T[]; total: number };
 }
+
+export enum UserRoles {
+  admin = "ADMIN",
+  dataEntry = "DATA ENTRY",
+  archiver = "ARCHIVER",
+}

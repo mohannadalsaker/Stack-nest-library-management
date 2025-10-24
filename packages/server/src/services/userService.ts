@@ -1,5 +1,13 @@
 import { User } from "../models/User";
-import type { CreateUserInput, LoginInput } from "../validators/userValidator";
+import type {
+  CreateUserInput,
+  UpdateUserInput,
+} from "../validators/userValidator";
+
+export const getUsers = async () => {
+  const users = await User.find().select("-password");
+  return users;
+};
 
 export const createUser = async (userData: CreateUserInput) => {
   const foundUser = await User.findOne({ email: userData.email });
@@ -11,14 +19,26 @@ export const createUser = async (userData: CreateUserInput) => {
   return await user.save();
 };
 
-export const login = async (loginData: LoginInput) => {
-  const foundUser = await User.findOne({ email: loginData.email });
-  if (!foundUser || !(await foundUser.comparePassword(loginData.password)))
-    throw new Error("Invalid credentials");
-  0;
-  return foundUser;
+export const updateUser = async ({
+  id,
+  userData,
+}: {
+  id: string;
+  userData: UpdateUserInput;
+}) => {
+  const newUser = await User.findByIdAndUpdate(id, userData, { new: true });
+  if (!newUser) {
+    throw new Error("User not found");
+  }
+
+  return newUser;
 };
 
 export const findUserById = async (id: string) => {
   return await User.findById(id).select("-password");
+};
+
+export const deleteUser = async (id: string) => {
+  await User.findOneAndDelete({ _id: id });
+  return;
 };

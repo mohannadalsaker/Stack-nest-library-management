@@ -26,7 +26,7 @@ export const useSideBar = () => {
       icon: Box,
     },
     {
-      title: "Useer",
+      title: "Users",
       path: "/users",
       icon: User,
     },
