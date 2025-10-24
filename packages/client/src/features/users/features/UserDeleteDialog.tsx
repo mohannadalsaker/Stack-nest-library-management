@@ -13,7 +13,7 @@ const UserDeleteDialog = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <DeleteDialogCard name={data?.data?.user.username!} />
+      <DeleteDialogCard name={data?.username!} />
       <div className="flex justify-end gap-3">
         <PrimaryButton
           title="Cancel"
@@ -21,7 +21,7 @@ const UserDeleteDialog = () => {
           onClick={() => changeOpenDelete(null)}
         />
         <PrimaryButton
-          title="Delete Product"
+          title="Delete User"
           className="text-white bg-[url('')] bg-red-500"
           isLoading={isPending}
           onClick={() =>

@@ -18,6 +18,4 @@ export interface UsersTableRow {
   updatedAt: string;
 }
 
-export interface SingleUserData {
-  user: UsersData;
-}
+export interface SingleUserData extends UsersData {}

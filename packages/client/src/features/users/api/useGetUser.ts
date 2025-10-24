@@ -4,11 +4,12 @@ import type { SingleUserData } from "../types";
 import { fetcher } from "@/api/fetcher";
 
 export const useGetUser = (id: string) => {
-  const query = useQuery<ApiResponse<SingleUserData>>({
+  const query = useQuery<ApiResponse<SingleUserData>, Error, SingleUserData>({
     queryKey: ["user", id],
     queryFn: () => fetcher<ApiResponse<SingleUserData>>(`/users/${id}`),
     staleTime: 0,
     enabled: Boolean(id),
+    select: (res) => res?.data,
   });
   return query;
 };

@@ -1,8 +1,6 @@
-import type { Response, Request } from "express";
+import type { Request, Response } from "express";
 import type { AuthRequest } from "../middleware/auth";
 import * as userService from "../services/userService";
-import jwt from "jsonwebtoken";
-import { config } from "../config/env";
 
 export const getProfile = async (req: AuthRequest, res: Response) => {
   try {
@@ -17,7 +15,7 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
 
     res.json({
       success: true,
-      data: { user },
+      data: user,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -41,7 +39,7 @@ export const getUserById = async (req: Request, res: Response) => {
 
     res.json({
       success: true,
-      data: { user },
+      data: user,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -56,21 +54,9 @@ export const createUser = async (req: Request, res: Response) => {
     const userData = req.body;
     const user = await userService.createUser(userData);
 
-    const token = jwt.sign({ userId: user._id }, config.jwtSecret, {
-      expiresIn: "7d",
-    });
-
     res.status(201).json({
       success: true,
-      data: {
-        user: {
-          id: user._id,
-          email: user.email,
-          username: user.username,
-          role: user.role,
-        },
-        token,
-      },
+      data: user,
     });
   } catch (error: any) {
     res.status(400).json({
@@ -87,14 +73,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
     res.status(201).json({
       success: true,
-      data: {
-        user: {
-          id: user._id,
-          email: user.email,
-          username: user.username,
-          role: user.role,
-        },
-      },
+      data: user,
     });
   } catch (error: any) {
     res.status(400).json({

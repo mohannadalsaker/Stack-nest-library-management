@@ -6,17 +6,15 @@ import {
   updateBookSchema,
 } from "../validators/bookValidator";
 
-const parseBookData = (body: any) => {
+const parseBookData = (body: any, deleteImage: boolean = true) => {
   const parsedData: any = { ...body };
 
-  // Convert string numbers to actual numbers
   if (body.rating) parsedData.rating = Number(body.rating);
   if (body.availableQuantity)
     parsedData.availableQuantity = Number(body.availableQuantity);
   if (body.totalQuantity) parsedData.totalQuantity = Number(body.totalQuantity);
 
-  // Remove file-related fields that are not in the schema
-  delete parsedData.isDeleteImage;
+  if (deleteImage) delete parsedData.isDeleteImage;
 
   return parsedData;
 };
@@ -30,7 +28,7 @@ export const getAllBooks = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      data: { books },
+      data: books,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -101,7 +99,7 @@ export const createBook = async (req: Request, res: Response) => {
 export const updateBook = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const parsedData = parseBookData(req.body);
+    const parsedData = parseBookData(req.body, false);
 
     // Handle cover image logic
     let coverImage: string | undefined;

@@ -21,7 +21,7 @@ const CategoryDeleteDialog = () => {
           onClick={() => changeOpenDelete(null)}
         />
         <PrimaryButton
-          title="Delete Product"
+          title="Delete Category"
           className="text-white bg-[url('')] bg-red-500"
           isLoading={isPending}
           onClick={() =>

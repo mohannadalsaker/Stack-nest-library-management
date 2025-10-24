@@ -9,6 +9,7 @@ interface SelectInputProps<T> {
   startIcon?: ReactNode;
   endIcon?: ReactNode;
   error?: string;
+  isLoading?: boolean;
   options: { label: string; value: string | number }[];
 }
 
@@ -22,6 +23,7 @@ const SelectInput = <T,>({
   placeholder,
   startIcon,
   options,
+  isLoading,
   ...props
 }: SelectInputProps<T> & SelectHTMLAttributes<HTMLSelectElement>) => {
   return (
@@ -49,8 +51,8 @@ const SelectInput = <T,>({
                 {placeholder}
               </option>
             )}
-            {options.length > 0 &&
-              options.map((option) => (
+            {options?.length > 0 &&
+              options?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>

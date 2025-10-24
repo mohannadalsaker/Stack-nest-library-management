@@ -35,9 +35,9 @@ export const useUserForm = () => {
   useEffect(() => {
     if (data)
       reset({
-        username: data.data.user.username,
-        email: data.data.user.email,
-        role: data.data.user.role,
+        username: data.username,
+        email: data.email,
+        role: data.role,
       });
   }, [data]);
 

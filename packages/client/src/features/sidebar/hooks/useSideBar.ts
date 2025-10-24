@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { SideBarItem } from "../types";
-import { Box, House, User } from "lucide-react";
+import { Book, Box, House, User } from "lucide-react";
 
 export const useSideBar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -14,6 +14,11 @@ export const useSideBar = () => {
       title: "Dashboard",
       path: "/",
       icon: House,
+    },
+    {
+      title: "Books",
+      path: "/books",
+      icon: Book,
     },
     {
       title: "Categories",
