@@ -25,6 +25,7 @@ const SubCategoriesDataPage = () => {
     isPending,
     handleScroll,
     isFetchingNextPage,
+    handleSearch,
   } = useSubCategoriesTable();
 
   return (
@@ -54,9 +55,9 @@ const SubCategoriesDataPage = () => {
         onClickAdd={() => {
           toggleOpenAdd();
         }}
-        // onSearch={(e) => {
-        //   // handleSearch(e.target.value)
-        // }}
+        onSearch={(e) => {
+          handleSearch(e.target.value);
+        }}
         title="Sub Categories"
         description={`Manage your sub categories inventory (${
           totalSubCategories || 0

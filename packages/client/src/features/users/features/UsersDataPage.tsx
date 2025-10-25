@@ -25,6 +25,7 @@ const UsersDataPage = () => {
     isPending,
     handleScroll,
     isFetchingNextPage,
+    handleSearch,
   } = useUsersTable();
 
   return (
@@ -54,9 +55,9 @@ const UsersDataPage = () => {
         onClickAdd={() => {
           toggleOpenAdd();
         }}
-        // onSearch={(e) => {
-        //   // handleSearch(e.target.value)
-        // }}
+        onSearch={(e) => {
+          handleSearch(e.target.value);
+        }}
         title="Users"
         description={`Manage your users inventory (${totalUsers || 0} users)`}
       />

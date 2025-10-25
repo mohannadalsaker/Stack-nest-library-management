@@ -25,6 +25,7 @@ const CategoriesDataPage = () => {
     isPending,
     handleScroll,
     isFetchingNextPage,
+    handleSearch,
   } = useCategoriesTable();
 
   return (
@@ -54,9 +55,9 @@ const CategoriesDataPage = () => {
         onClickAdd={() => {
           toggleOpenAdd();
         }}
-        // onSearch={(e) => {
-        //   // handleSearch(e.target.value)
-        // }}
+        onSearch={(e) => {
+          handleSearch(e.target.value);
+        }}
         title="Categories"
         description={`Manage your categories inventory (${
           totalCategories || 0

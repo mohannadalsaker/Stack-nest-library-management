@@ -1,4 +1,3 @@
-import { WatchFileKind } from "typescript";
 import { SubCategory } from "../models/SubCategory";
 import type {
   CreateSubCategoryInput,
@@ -7,12 +6,33 @@ import type {
 
 export const findSubCategories = async ({
   categoryId,
+  q,
+  skip,
+  limit,
 }: {
   categoryId?: string;
+  q?: string;
+  skip: number;
+  limit: number;
 }) => {
-  const query = categoryId ? { category: categoryId } : {};
-  const subCategories = await SubCategory.find(query).populate("category");
-  return subCategories;
+  const filterQuery = q
+    ? {
+        name: { $regex: q, $options: "i" },
+        ...(categoryId ? { category: categoryId } : {}),
+      }
+    : {};
+  const [subCategories, total] = await Promise.all([
+    SubCategory.find()
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .populate("category"),
+    SubCategory.countDocuments(filterQuery),
+  ]);
+  return {
+    data: subCategories,
+    total,
+  };
 };
 
 export const findSubCategoryById = async (id: string) => {

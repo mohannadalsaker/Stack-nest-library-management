@@ -5,12 +5,41 @@ import type {
   UpdateBookInput,
 } from "../validators/bookValidator";
 
-export const getAllBooks = async ({ status }: { status?: BookStatus }) => {
-  const books = await Book.find(status ? { status } : {})
-    .populate("category")
-    .populate("subCategory");
+export const getAllBooks = async ({
+  status,
+  q,
+  skip,
+  limit,
+}: {
+  status?: BookStatus;
+  q: string;
+  skip: number;
+  limit: number;
+}) => {
+  const filterQuery = q
+    ? {
+        $or: [
+          { title: { $regex: q, $options: "i" } },
+          { author: { $regex: q, $options: "i" } },
+          { isbn: { $regex: q, $options: "i" } },
+        ],
+        ...(status ? { status } : {}),
+      }
+    : {};
+  const [books, total] = await Promise.all([
+    Book.find()
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .populate("category")
+      .populate("subCategory"),
+    Book.countDocuments(filterQuery),
+  ]);
 
-  return books;
+  return {
+    data: books,
+    total,
+  };
 };
 
 export const findBookById = async (id: string) => {

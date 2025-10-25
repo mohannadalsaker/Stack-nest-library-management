@@ -7,7 +7,7 @@ import {
 } from "../validators/subCategoryValidator";
 
 const router = Router();
-router.get("/", subCategoryController.getAllSubCategories);
+router.get("/search", subCategoryController.getAllSubCategories);
 router.get("/:id", subCategoryController.getSubCategoryById);
 router.post(
   "/",

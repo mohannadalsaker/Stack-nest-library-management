@@ -4,9 +4,35 @@ import type {
   UpdateUserInput,
 } from "../validators/userValidator";
 
-export const getUsers = async () => {
-  const users = await User.find().select("-password");
-  return users;
+export const getUsers = async ({
+  limit,
+  skip,
+  q,
+}: {
+  limit: number;
+  skip: number;
+  q: string;
+}) => {
+  const searchFilter = q
+    ? {
+        $or: [
+          { username: { $regex: q, $options: "i" } },
+          { email: { $regex: q, $options: "i" } },
+        ],
+      }
+    : {};
+  const [users, total] = await Promise.all([
+    User.find()
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .select("-password"),
+    User.countDocuments(searchFilter),
+  ]);
+  return {
+    data: users,
+    total,
+  };
 };
 
 export const createUser = async (userData: CreateUserInput) => {

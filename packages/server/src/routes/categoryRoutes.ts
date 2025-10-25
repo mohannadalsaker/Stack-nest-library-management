@@ -7,7 +7,7 @@ import {
 } from "../validators/categoryValidator";
 
 const router = Router();
-router.get("/", categoryController.getCategories);
+router.get("/search", categoryController.getCategories);
 router.get("/:id", categoryController.getCategoryById);
 router.post(
   "/",

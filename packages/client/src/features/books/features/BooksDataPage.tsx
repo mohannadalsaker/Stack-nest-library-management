@@ -24,6 +24,7 @@ const BooksDataPage = () => {
     isPending,
     handleScroll,
     isFetchingNextPage,
+    handleSearch,
   } = useBooksTable();
 
   return (
@@ -53,9 +54,9 @@ const BooksDataPage = () => {
         onClickAdd={() => {
           toggleOpenAdd();
         }}
-        // onSearch={(e) => {
-        //   // handleSearch(e.target.value)
-        // }}
+        onSearch={(e) => {
+          handleSearch(e.target.value);
+        }}
         title="Books"
         description={`Manage your books inventory (${totalBooks || 0} books)`}
       />

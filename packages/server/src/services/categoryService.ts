@@ -4,10 +4,26 @@ import type {
   UpdateCategoryInput,
 } from "../validators/categoryValidator";
 
-export const getCategories = async () => {
-  const categories = await Category.find({});
+export const getCategories = async ({
+  q,
+  skip,
+  limit,
+}: {
+  q: string;
+  skip: number;
+  limit: number;
+}) => {
+  const searchFilter = q ? { name: { $regex: q, $options: "i" } } : {};
 
-  return categories;
+  const [categories, total] = await Promise.all([
+    Category.find(searchFilter).skip(skip).limit(limit).sort({ createdAt: -1 }),
+    Category.countDocuments(searchFilter),
+  ]);
+
+  return {
+    data: categories,
+    total,
+  };
 };
 
 export const findCategoryById = async (id: string) => {

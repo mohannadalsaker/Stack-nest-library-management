@@ -3,7 +3,17 @@ import * as categoryService from "../services/categoryService";
 
 export const getCategories = async (req: Request, res: Response) => {
   try {
-    const categories = await categoryService.getCategories();
+    const { q, skip, limit } = req.query as {
+      q: string;
+      skip: string;
+      limit: string;
+    };
+    const query = {
+      q,
+      skip: Number(skip),
+      limit: Number(limit),
+    };
+    const categories = await categoryService.getCategories(query);
     res.status(200).json({
       success: true,
       data: categories,

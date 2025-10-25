@@ -21,10 +21,20 @@ const parseBookData = (body: any, deleteImage: boolean = true) => {
 
 export const getAllBooks = async (req: Request, res: Response) => {
   try {
-    const { status } = req.query as { status?: BookStatus };
-    const books = await bookService.getAllBooks({
+    const { status, q, skip, limit } = req.query as {
+      status?: BookStatus;
+      q: string;
+      skip: string;
+      limit: string;
+    };
+
+    const query = {
       ...(status ? { status } : {}),
-    });
+      q,
+      skip: Number(skip),
+      limit: Number(limit),
+    };
+    const books = await bookService.getAllBooks(query);
 
     res.status(200).json({
       success: true,

@@ -1,13 +1,14 @@
-import { useDialogStore } from "@/stores";
-import { useCallback, useRef, useState } from "react";
-import { useGetBooks } from "../api";
 import type { MainTableAction, MainTableColumn } from "@/shared/types";
-import type { BooksTableRow } from "../types";
-import { Pencil, Trash2 } from "lucide-react";
+import { useDialogStore } from "@/stores";
 import { debounce } from "lodash";
+import { ArchiveRestoreIcon, Pencil, Trash2 } from "lucide-react";
+import { useCallback, useRef, useState } from "react";
+import { useGetBooks, useUpdateBookStatus } from "../api";
+import type { BooksTableRow } from "../types";
 
 export const useBooksTable = () => {
   const { changeOpenDelete, changeOpenEdit } = useDialogStore();
+  const { mutate: updateBookStatus } = useUpdateBookStatus();
 
   const [searchValue, setSearchValue] = useState("");
   const tableRef = useRef(null);
@@ -19,7 +20,7 @@ export const useBooksTable = () => {
     isFetchingNextPage,
     isLoading,
     isPending,
-  } = useGetBooks({ q: "" });
+  } = useGetBooks({ q: searchValue });
 
   const columns: MainTableColumn<BooksTableRow>[] = [
     {
@@ -64,6 +65,10 @@ export const useBooksTable = () => {
     {
       icon: Pencil,
       action: (id) => changeOpenEdit(id),
+    },
+    {
+      icon: ArchiveRestoreIcon,
+      action: (id) => updateBookStatus({ id }),
     },
     {
       icon: Trash2,

@@ -19,7 +19,7 @@ export const useCategoriesTable = () => {
     isFetchingNextPage,
     isLoading,
     isPending,
-  } = useGetCategories({ q: "" });
+  } = useGetCategories({ q: searchValue });
 
   const columns: MainTableColumn<CategoriesTableRow>[] = [
     {

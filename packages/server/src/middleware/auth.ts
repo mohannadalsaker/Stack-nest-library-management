@@ -2,8 +2,15 @@ import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { config } from "../config/env";
 
+export interface JwtPayload {
+  userId: string;
+  role: string;
+  iat?: number;
+  exp?: number;
+}
+
 export interface AuthRequest extends Request {
-  user?: any;
+  user?: JwtPayload;
 }
 
 export const authenticate = (
@@ -14,14 +21,20 @@ export const authenticate = (
   const token = req.header("Authorization")?.replace("Bearer ", "");
 
   if (!token) {
-    return res.status(401).json({ error: "No token, authorization denied" });
+    return res.status(401).json({
+      success: false,
+      error: "No token, authorization denied",
+    });
   }
 
   try {
-    const decoded = jwt.verify(token, config.jwtSecret);
+    const decoded = jwt.verify(token, config.jwtSecret) as JwtPayload;
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(401).json({ error: "Token is not valid" });
+    res.status(401).json({
+      success: false,
+      error: "Token is not valid",
+    });
   }
 };

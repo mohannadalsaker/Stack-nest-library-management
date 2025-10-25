@@ -19,7 +19,7 @@ export const useUsersTable = () => {
     isFetchingNextPage,
     isLoading,
     isPending,
-  } = useGetUsers({ q: "" });
+  } = useGetUsers({ q: searchValue });
 
   const columns: MainTableColumn<UsersTableRow>[] = [
     {

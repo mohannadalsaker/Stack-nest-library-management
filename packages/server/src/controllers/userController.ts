@@ -2,6 +2,31 @@ import type { Request, Response } from "express";
 import type { AuthRequest } from "../middleware/auth";
 import * as userService from "../services/userService";
 
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const { q, skip, limit } = req.query as {
+      q: string;
+      skip: string;
+      limit: string;
+    };
+    const users = await userService.getUsers({
+      q,
+      skip: Number(skip),
+      limit: Number(limit),
+    });
+
+    res.json({
+      success: true,
+      data: users,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
 export const getProfile = async (req: AuthRequest, res: Response) => {
   try {
     const user = await userService.findUserById(req.user.userId);
@@ -77,22 +102,6 @@ export const updateUser = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     res.status(400).json({
-      success: false,
-      error: error.message,
-    });
-  }
-};
-
-export const getAllUsers = async (_req: Request, res: Response) => {
-  try {
-    const users = await userService.getUsers();
-
-    res.json({
-      success: true,
-      data: users,
-    });
-  } catch (error: any) {
-    res.status(500).json({
       success: false,
       error: error.message,
     });

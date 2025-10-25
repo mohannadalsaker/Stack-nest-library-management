@@ -19,7 +19,7 @@ export const useSubCategoriesTable = () => {
     isFetchingNextPage,
     isLoading,
     isPending,
-  } = useGetSubtCategories({ q: "" });
+  } = useGetSubtCategories({ q: searchValue });
 
   const columns: MainTableColumn<SubCategoriesTableRow>[] = [
     {

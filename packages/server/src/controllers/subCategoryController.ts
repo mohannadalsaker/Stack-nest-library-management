@@ -3,8 +3,18 @@ import * as subCategoryService from "../services/subCategoryService";
 
 export const getAllSubCategories = async (req: Request, res: Response) => {
   try {
-    const { categoryId } = req.query;
-    const query = categoryId ? { categoryId: categoryId as string } : {};
+    const { categoryId, q, skip, limit } = req.query as {
+      q: string;
+      skip: string;
+      limit: string;
+      categoryId?: string;
+    };
+    const query = {
+      ...(categoryId ? { categoryId: categoryId } : {}),
+      q,
+      skip: Number(skip),
+      limit: Number(limit),
+    };
     const subCategories = await subCategoryService.findSubCategories(query);
     res.status(200).json({
       success: true,

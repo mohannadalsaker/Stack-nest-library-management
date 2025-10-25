@@ -7,9 +7,13 @@ export const login = async (req: Request, res: Response) => {
   try {
     const user = await authService.login(req.body);
 
-    const token = jwt.sign({ userId: user._id }, config.jwtSecret, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      config.jwtSecret,
+      {
+        expiresIn: "7d",
+      }
+    );
 
     res.json({
       success: true,
