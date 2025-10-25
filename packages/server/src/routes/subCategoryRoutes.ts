@@ -5,20 +5,36 @@ import {
   createSubCategorySchema,
   updateSubCategorySchema,
 } from "../validators/subCategoryValidator";
+import { requireDataEntry } from "../middleware/roles";
+import { authenticate } from "../middleware/auth";
 
 const router = Router();
-router.get("/search", subCategoryController.getAllSubCategories);
-router.get("/:id", subCategoryController.getSubCategoryById);
+router.get("/search", authenticate, subCategoryController.getAllSubCategories);
+router.get(
+  "/:id",
+  authenticate,
+  requireDataEntry,
+  subCategoryController.getSubCategoryById
+);
 router.post(
   "/",
+  authenticate,
+  requireDataEntry,
   validate(createSubCategorySchema),
   subCategoryController.createSubCategory
 );
 router.put(
   "/:id",
+  authenticate,
+  requireDataEntry,
   validate(updateSubCategorySchema),
   subCategoryController.updateSubCategory
 );
-router.delete("/:id", subCategoryController.deleteSubCategory);
+router.delete(
+  "/:id",
+  authenticate,
+  requireDataEntry,
+  subCategoryController.deleteSubCategory
+);
 
 export { router as subCategoryRoutes };

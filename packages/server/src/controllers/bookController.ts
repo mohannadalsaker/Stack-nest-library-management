@@ -1,10 +1,11 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
 import * as bookService from "../services/bookService";
 import type { BookStatus } from "../types/bookTypes";
 import {
   createBookSchema,
   updateBookSchema,
 } from "../validators/bookValidator";
+import type { AuthRequest } from "../middleware/auth";
 
 const parseBookData = (body: any, deleteImage: boolean = true) => {
   const parsedData: any = { ...body };
@@ -19,7 +20,7 @@ const parseBookData = (body: any, deleteImage: boolean = true) => {
   return parsedData;
 };
 
-export const getAllBooks = async (req: Request, res: Response) => {
+export const getAllBooks = async (req: AuthRequest, res: Response) => {
   try {
     const { status, q, skip, limit } = req.query as {
       status?: BookStatus;
@@ -48,7 +49,7 @@ export const getAllBooks = async (req: Request, res: Response) => {
   }
 };
 
-export const getBookById = async (req: Request, res: Response) => {
+export const getBookById = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const book = await bookService.findBookById(id as string);
@@ -70,7 +71,7 @@ export const getBookById = async (req: Request, res: Response) => {
   }
 };
 
-export const createBook = async (req: Request, res: Response) => {
+export const createBook = async (req: AuthRequest, res: Response) => {
   try {
     // Parse the form data
     const parsedData = parseBookData(req.body);
@@ -106,7 +107,7 @@ export const createBook = async (req: Request, res: Response) => {
   }
 };
 
-export const updateBook = async (req: Request, res: Response) => {
+export const updateBook = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const parsedData = parseBookData(req.body, false);
@@ -161,7 +162,7 @@ export const updateBook = async (req: Request, res: Response) => {
     });
   }
 };
-export const changeBookStatus = async (req: Request, res: Response) => {
+export const changeBookStatus = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     await bookService.changeBookStatus(id as string);
@@ -177,7 +178,7 @@ export const changeBookStatus = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteBook = async (req: Request, res: Response) => {
+export const deleteBook = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     await bookService.deleteBook(id as string);

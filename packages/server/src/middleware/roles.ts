@@ -23,5 +23,5 @@ export const requireRole = (allowedRoles: string[]) => {
 
 // Specific role middlewares for convenience
 export const requireAdmin = requireRole(["ADMIN"]);
-export const requireLibrarian = requireRole(["LIBRARIAN", "ADMIN"]);
-export const requireMember = requireRole(["MEMBER", "LIBRARIAN", "ADMIN"]);
+export const requireDataEntry = requireRole(["DATA ENTRY", "ADMIN"]);
+export const requireArchiver = requireRole(["ARCHIVER", "ADMIN"]);

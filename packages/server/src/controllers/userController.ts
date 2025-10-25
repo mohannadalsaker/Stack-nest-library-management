@@ -1,8 +1,8 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
 import type { AuthRequest } from "../middleware/auth";
 import * as userService from "../services/userService";
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (req: AuthRequest, res: Response) => {
   try {
     const { q, skip, limit } = req.query as {
       q: string;
@@ -29,7 +29,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 export const getProfile = async (req: AuthRequest, res: Response) => {
   try {
-    const user = await userService.findUserById(req.user.userId);
+    const user = await userService.findUserById(req.user!.userId);
 
     if (!user) {
       return res.status(404).json({
@@ -50,7 +50,7 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const user = await userService.findUserById(id as string);
@@ -74,7 +74,7 @@ export const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = async (req: AuthRequest, res: Response) => {
   try {
     const userData = req.body;
     const user = await userService.createUser(userData);
@@ -90,7 +90,7 @@ export const createUser = async (req: Request, res: Response) => {
     });
   }
 };
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req: AuthRequest, res: Response) => {
   try {
     const userData = req.body;
     const { id } = req.params;
@@ -108,7 +108,7 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     await userService.deleteUser(id as string);

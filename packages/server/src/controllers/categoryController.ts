@@ -1,7 +1,8 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
 import * as categoryService from "../services/categoryService";
+import type { AuthRequest } from "../middleware/auth";
 
-export const getCategories = async (req: Request, res: Response) => {
+export const getCategories = async (req: AuthRequest, res: Response) => {
   try {
     const { q, skip, limit } = req.query as {
       q: string;
@@ -26,7 +27,7 @@ export const getCategories = async (req: Request, res: Response) => {
   }
 };
 
-export const getCategoryById = async (req: Request, res: Response) => {
+export const getCategoryById = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const category = await categoryService.findCategoryById(id as string);
@@ -48,7 +49,7 @@ export const getCategoryById = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteCategory = async (req: Request, res: Response) => {
+export const deleteCategory = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     await categoryService.deleteCategory(id as string);
@@ -70,7 +71,7 @@ export const deleteCategory = async (req: Request, res: Response) => {
     });
   }
 };
-export const createCategory = async (req: Request, res: Response) => {
+export const createCategory = async (req: AuthRequest, res: Response) => {
   try {
     const body = req.body;
     await categoryService.createCategory(body);
@@ -86,7 +87,7 @@ export const createCategory = async (req: Request, res: Response) => {
     });
   }
 };
-export const updatedCategory = async (req: Request, res: Response) => {
+export const updatedCategory = async (req: AuthRequest, res: Response) => {
   try {
     const {
       body,
