@@ -1,13 +1,15 @@
 import { Dialog, MainTable } from "@/shared/components";
 import FeatureHeader from "@/shared/components/FeatureHeader";
-import { useDialogStore } from "@/stores";
+import { useAuthStore, useDialogStore } from "@/stores";
 import { Loader } from "lucide-react";
 import { useSubCategoriesTable } from "../hooks";
 import type { SubCategoriesTableRow } from "../types";
 import SubCategoryDeleteDialog from "./SubCategoryDeleteDialog";
 import SubCategoryForm from "./SubCategoryForm";
+import { UserRoles } from "@/shared/types";
 
 const SubCategoriesDataPage = () => {
+  const { role } = useAuthStore();
   const {
     isOpenAdd,
     openEditId,
@@ -52,6 +54,7 @@ const SubCategoriesDataPage = () => {
       </Dialog>
       <FeatureHeader
         buttonTitle="Add Sub Category"
+        hasButton={role !== UserRoles.archiver}
         onClickAdd={() => {
           toggleOpenAdd();
         }}

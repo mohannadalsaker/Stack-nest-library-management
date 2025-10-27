@@ -23,9 +23,11 @@ const MainTable = <T extends { id: string }>({
               {col.label}
             </th>
           ))}
-          <th className="p-3 text-left text-primary-text text-nowrap">
-            Actions
-          </th>
+          {actions && actions.length > 0 && (
+            <th className="p-3 text-left text-primary-text text-nowrap">
+              Actions
+            </th>
+          )}
         </tr>
       </thead>
       <tbody>

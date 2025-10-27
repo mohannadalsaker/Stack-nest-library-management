@@ -1,12 +1,17 @@
-import type { MainTableAction, MainTableColumn } from "@/shared/types";
+import {
+  UserRoles,
+  type MainTableAction,
+  type MainTableColumn,
+} from "@/shared/types";
 import { useGetCategories } from "../api/useGetCategories";
 import type { CategoriesTableRow } from "../types";
 import { Pencil, Trash2 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
-import { useDialogStore } from "@/stores";
+import { useAuthStore, useDialogStore } from "@/stores";
 import { debounce } from "lodash";
 
 export const useCategoriesTable = () => {
+  const { role } = useAuthStore();
   const { changeOpenDelete, changeOpenEdit } = useDialogStore();
 
   const [searchValue, setSearchValue] = useState("");
@@ -37,15 +42,23 @@ export const useCategoriesTable = () => {
   ];
 
   const tableActions: MainTableAction[] = [
-    {
-      icon: Pencil,
-      action: (id) => changeOpenEdit(id),
-    },
-    {
-      icon: Trash2,
-      action: (id) => changeOpenDelete(id),
-      type: "delete",
-    },
+    ...(role !== UserRoles.archiver
+      ? [
+          {
+            icon: Pencil,
+            action: (id: string) => changeOpenEdit(id),
+          },
+        ]
+      : []),
+    ...(role !== UserRoles.archiver
+      ? [
+          {
+            icon: Trash2,
+            action: (id: string) => changeOpenDelete(id),
+            type: "delete" as const,
+          },
+        ]
+      : []),
   ];
 
   const handleSearch = debounce((value: string) => {

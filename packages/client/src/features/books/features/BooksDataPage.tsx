@@ -1,12 +1,14 @@
 import { BookDeleteDialog, BooksForm } from "@/features/books/features";
 import { Dialog, MainTable } from "@/shared/components";
 import FeatureHeader from "@/shared/components/FeatureHeader";
-import { useDialogStore } from "@/stores";
+import { useAuthStore, useDialogStore } from "@/stores";
 import { useBooksTable } from "../hooks";
 import { Loader } from "lucide-react";
 import type { BooksTableRow } from "../types";
+import { UserRoles } from "@/shared/types";
 
 const BooksDataPage = () => {
+  const { role } = useAuthStore();
   const {
     isOpenAdd,
     openEditId,
@@ -51,12 +53,14 @@ const BooksDataPage = () => {
       </Dialog>
       <FeatureHeader
         buttonTitle="Add Book"
+        hasButton={role !== UserRoles.archiver}
         onClickAdd={() => {
           toggleOpenAdd();
         }}
         onSearch={(e) => {
           handleSearch(e.target.value);
         }}
+        searchPlaceholder="Search in Books by (title, isbn, author)"
         title="Books"
         description={`Manage your books inventory (${totalBooks || 0} books)`}
       />

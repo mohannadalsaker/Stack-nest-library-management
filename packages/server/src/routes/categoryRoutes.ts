@@ -9,12 +9,7 @@ import { requireDataEntry } from "../middleware/roles";
 import { authenticate } from "../middleware/auth";
 
 const router = Router();
-router.get(
-  "/search",
-  authenticate,
-  requireDataEntry,
-  categoryController.getCategories
-);
+router.get("/search", authenticate, categoryController.getCategories);
 router.get(
   "/:id",
   authenticate,

@@ -1,5 +1,9 @@
-import type { MainTableAction, MainTableColumn } from "@/shared/types";
-import { useDialogStore } from "@/stores";
+import {
+  UserRoles,
+  type MainTableAction,
+  type MainTableColumn,
+} from "@/shared/types";
+import { useAuthStore, useDialogStore } from "@/stores";
 import { debounce } from "lodash";
 import { ArchiveRestoreIcon, Pencil, Trash2 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
@@ -7,6 +11,7 @@ import { useGetBooks, useUpdateBookStatus } from "../api";
 import type { BooksTableRow } from "../types";
 
 export const useBooksTable = () => {
+  const { role } = useAuthStore();
   const { changeOpenDelete, changeOpenEdit } = useDialogStore();
   const { mutate: updateBookStatus } = useUpdateBookStatus();
 
@@ -62,19 +67,31 @@ export const useBooksTable = () => {
   ];
 
   const tableActions: MainTableAction[] = [
-    {
-      icon: Pencil,
-      action: (id) => changeOpenEdit(id),
-    },
-    {
-      icon: ArchiveRestoreIcon,
-      action: (id) => updateBookStatus({ id }),
-    },
-    {
-      icon: Trash2,
-      action: (id) => changeOpenDelete(id),
-      type: "delete",
-    },
+    ...(role !== UserRoles.archiver
+      ? [
+          {
+            icon: Pencil,
+            action: (id: string) => changeOpenEdit(id),
+          },
+        ]
+      : []),
+    ...(role !== UserRoles.dataEntry
+      ? [
+          {
+            icon: ArchiveRestoreIcon,
+            action: (id: string) => updateBookStatus({ id }),
+          },
+        ]
+      : []),
+    ...(role !== UserRoles.archiver
+      ? [
+          {
+            icon: Trash2,
+            action: (id: string) => changeOpenDelete(id),
+            type: "delete" as const,
+          },
+        ]
+      : []),
   ];
 
   const handleSearch = debounce((value: string) => {

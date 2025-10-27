@@ -1,4 +1,4 @@
-import { useDialogStore } from "@/stores";
+import { useAuthStore, useDialogStore } from "@/stores";
 import { useUsersTable } from "../hooks";
 import { Dialog, MainTable } from "@/shared/components";
 import UserForm from "./UsersForm";
@@ -6,8 +6,10 @@ import UserDeleteDialog from "./UserDeleteDialog";
 import FeatureHeader from "@/shared/components/FeatureHeader";
 import type { UsersTableRow } from "../types";
 import { Loader } from "lucide-react";
+import { UserRoles } from "@/shared/types";
 
 const UsersDataPage = () => {
+  const { role } = useAuthStore();
   const {
     isOpenAdd,
     openEditId,
@@ -52,6 +54,7 @@ const UsersDataPage = () => {
       </Dialog>
       <FeatureHeader
         buttonTitle="Add User"
+        hasButton={role === UserRoles.admin}
         onClickAdd={() => {
           toggleOpenAdd();
         }}

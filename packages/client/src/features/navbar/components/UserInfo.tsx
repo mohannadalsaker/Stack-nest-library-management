@@ -17,9 +17,9 @@ const UserInfo = () => {
         ) : (
           <>
             <h4 className="text-primary-text font-semibold">
-              {profile.username}
+              {profile?.username}
             </h4>
-            <h6 className="text-sm text-secondary-text">{profile.email}</h6>
+            <h6 className="text-sm text-secondary-text">{profile?.email}</h6>
           </>
         )}
       </div>

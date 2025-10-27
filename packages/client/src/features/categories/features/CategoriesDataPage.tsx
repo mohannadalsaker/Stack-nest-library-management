@@ -1,13 +1,15 @@
 import { Dialog, MainTable } from "@/shared/components";
 import FeatureHeader from "@/shared/components/FeatureHeader";
-import { useDialogStore } from "@/stores";
+import { useAuthStore, useDialogStore } from "@/stores";
 import CategoryForm from "./CategoryForm";
 import CategoryDeleteDialog from "./CategoryDeleteDialog";
 import { useCategoriesTable } from "../hooks";
 import type { CategoriesTableRow } from "../types";
 import { Loader } from "lucide-react";
+import { UserRoles } from "@/shared/types";
 
 const CategoriesDataPage = () => {
+  const { role } = useAuthStore();
   const {
     isOpenAdd,
     openEditId,
@@ -52,6 +54,7 @@ const CategoriesDataPage = () => {
       </Dialog>
       <FeatureHeader
         buttonTitle="Add Category"
+        hasButton={role !== UserRoles.archiver}
         onClickAdd={() => {
           toggleOpenAdd();
         }}

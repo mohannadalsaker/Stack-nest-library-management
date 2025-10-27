@@ -8,6 +8,7 @@ interface FeatureHeaderProps {
   description?: string;
   hasButton?: boolean;
   buttonTitle?: string;
+  searchPlaceholder?: string;
   onClickAdd?: () => void;
   onSearch?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -17,6 +18,7 @@ const FeatureHeader = ({
   buttonTitle,
   description,
   hasButton = true,
+  searchPlaceholder,
   onClickAdd,
   onSearch,
 }: FeatureHeaderProps) => {
@@ -39,7 +41,7 @@ const FeatureHeader = ({
         </div>
       </div>
       <TextField
-        placeholder={`Search in ${title}`}
+        placeholder={searchPlaceholder || `Search in ${title}`}
         onChange={onSearch}
         startIcon={<Search size={20} className="text-secondary-text" />}
         className="bg-white"

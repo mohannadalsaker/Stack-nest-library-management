@@ -11,7 +11,7 @@ import { setLsValue } from "@/utils";
 
 export const useLoginForm = () => {
   const navigate = useNavigate();
-  const { authenticate } = useAuthStore();
+  const { authenticate, setRole } = useAuthStore();
   const {
     formState: { errors },
     handleSubmit,
@@ -30,6 +30,7 @@ export const useLoginForm = () => {
     login(data, {
       onSuccess: (res) => {
         authenticate();
+        setRole(res?.data?.user?.role);
         setLsValue("token", res?.data?.token);
         navigate("/", { replace: true });
       },
