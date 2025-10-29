@@ -8,12 +8,16 @@ import { debounce } from "lodash";
 import { ArchiveRestoreIcon, Pencil, Trash2 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { useGetBooks, useUpdateBookStatus } from "../api";
-import type { BooksTableRow } from "../types";
+import { BookStatus, type BookFilters, type BooksTableRow } from "../types";
 
 export const useBooksTable = () => {
   const { role } = useAuthStore();
   const { changeOpenDelete, changeOpenEdit } = useDialogStore();
   const { mutate: updateBookStatus } = useUpdateBookStatus();
+
+  const [filters, setFilters] = useState<Partial<BookFilters>>({});
+  const [tempFilters, setTempFilters] = useState<Partial<BookFilters>>({});
+  const [isOpenFilter, setIsOpenFilter] = useState<boolean>(false);
 
   const [searchValue, setSearchValue] = useState("");
   const tableRef = useRef(null);
@@ -25,9 +29,16 @@ export const useBooksTable = () => {
     isFetchingNextPage,
     isLoading,
     isPending,
-  } = useGetBooks({ q: searchValue });
+  } = useGetBooks({
+    q: searchValue,
+    ...filters,
+  });
 
   const columns: MainTableColumn<BooksTableRow>[] = [
+    {
+      key: "image",
+      label: "Cover image",
+    },
     {
       key: "title",
       label: "Title",
@@ -54,7 +65,11 @@ export const useBooksTable = () => {
     },
     {
       key: "category",
-      label: "Category name",
+      label: "Category",
+    },
+    {
+      key: "subCategory",
+      label: "Sub category",
     },
     {
       key: "createdAt",
@@ -114,8 +129,25 @@ export const useBooksTable = () => {
   const rows = data?.pages.flatMap((page) => page.books) || [];
   const totalBooks = data?.pages[0]?.total || 0;
 
+  const handleFilter = () => {
+    setFilters(tempFilters);
+    setIsOpenFilter(false);
+  };
+
+  const handleChangeTempFilter = (
+    key: keyof Partial<BookFilters> | undefined,
+    value: string | BookStatus | undefined
+  ) => {
+    const oldFilters = { ...tempFilters };
+    if (key && value) oldFilters[key] = value as BookStatus;
+    setTempFilters(oldFilters);
+  };
+
+  const toggleOpenFilter = () => {
+    setIsOpenFilter((prev) => !prev);
+  };
+
   return {
-    fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
@@ -127,6 +159,12 @@ export const useBooksTable = () => {
     searchValue,
     tableRef,
     isPending,
+    tempFilters,
+    isOpenFilter,
+    fetchNextPage,
     handleScroll,
+    handleFilter,
+    handleChangeTempFilter,
+    toggleOpenFilter,
   };
 };

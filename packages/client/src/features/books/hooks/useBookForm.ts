@@ -11,6 +11,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { bookSchema, type BookInput } from "../validation/bookFormSchema";
+import { getFileUrl } from "@/utils";
 
 export const useBookForm = () => {
   const { openEditId, closeDialog } = useDialogStore();
@@ -26,6 +27,7 @@ export const useBookForm = () => {
     reset,
     handleSubmit,
     watch,
+    setValue,
   } = useForm<BookInput>({
     resolver: zodResolver(bookSchema),
     defaultValues: {
@@ -48,7 +50,7 @@ export const useBookForm = () => {
     useGetSubCategoriesByCategory(watch("category"));
 
   useEffect(() => {
-    if (data)
+    if (data) {
       reset({
         author: data.author,
         availableQuantity: String(data.availableQuantity),
@@ -63,6 +65,13 @@ export const useBookForm = () => {
         totalQuantity: String(data.totalQuantity),
         isDeleteImage: "0",
       });
+      fetch(getFileUrl(data?.coverImage))
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], "image.jpg", { type: blob.type });
+          setValue("coverImage", file);
+        });
+    }
   }, [data]);
 
   const { mutate: createBook, isPending: isCreating } = useCreateBook();
@@ -99,7 +108,9 @@ export const useBookForm = () => {
     control,
     register,
     errors,
+    data,
     closeDialog,
+    setValue,
     isCreating,
     isUpdating,
     isLoadingBook,

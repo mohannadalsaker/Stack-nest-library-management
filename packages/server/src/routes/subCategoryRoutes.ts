@@ -9,6 +9,7 @@ import { requireDataEntry } from "../middleware/roles";
 import { authenticate } from "../middleware/auth";
 
 const router = Router();
+router.get("/", authenticate, subCategoryController.getAllSubCategories);
 router.get("/search", authenticate, subCategoryController.getAllSubCategories);
 router.get(
   "/:id",

@@ -18,7 +18,7 @@ export const fileSchema = z
 export const createBookSchema = z.object({
   title: z.string().min(1),
   description: z.string().optional(),
-  coverImage: fileSchema.optional(),
+  coverImage: z.string().optional(),
   author: z.string().min(1),
   rating: z.number().optional(),
   isbn: z
@@ -37,7 +37,7 @@ export const updateBookSchema = z
   .object({
     title: z.string().optional(),
     description: z.string().optional(),
-    coverImage: z.file().optional(),
+    coverImage: z.string().optional(),
     author: z.string().optional(),
     rating: z.number().optional(),
     isbn: z.string().optional(),

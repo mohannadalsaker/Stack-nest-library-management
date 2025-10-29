@@ -1,6 +1,6 @@
 import type { Response } from "express";
 import * as bookService from "../services/bookService";
-import type { BookStatus } from "../types/bookTypes";
+import type { BookFilters, BookStatus } from "../types/bookTypes";
 import {
   createBookSchema,
   updateBookSchema,
@@ -22,18 +22,17 @@ const parseBookData = (body: any, deleteImage: boolean = true) => {
 
 export const getAllBooks = async (req: AuthRequest, res: Response) => {
   try {
-    const { status, q, skip, limit } = req.query as {
-      status?: BookStatus;
+    const { q, skip, limit, ...filters } = req.query as {
       q: string;
       skip: string;
       limit: string;
-    };
+    } & Partial<BookFilters>;
 
     const query = {
-      ...(status ? { status } : {}),
       q,
       skip: Number(skip),
       limit: Number(limit),
+      ...filters,
     };
     const books = await bookService.getAllBooks(query);
 
@@ -129,6 +128,7 @@ export const updateBook = async (req: AuthRequest, res: Response) => {
     if (coverImage !== undefined) {
       updateData.coverImage = coverImage;
     }
+    console.log(req.file);
 
     // Validate the data with Zod
     const validatedData = updateBookSchema.parse(updateData);
@@ -143,6 +143,7 @@ export const updateBook = async (req: AuthRequest, res: Response) => {
       data: updatedBook,
     });
   } catch (error: any) {
+    console.log(error);
     if (error.name === "ZodError") {
       return res.status(400).json({
         success: false,

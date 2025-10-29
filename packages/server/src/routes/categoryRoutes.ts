@@ -10,6 +10,7 @@ import { authenticate } from "../middleware/auth";
 
 const router = Router();
 router.get("/search", authenticate, categoryController.getCategories);
+router.get("/", authenticate, categoryController.getCategories);
 router.get(
   "/:id",
   authenticate,

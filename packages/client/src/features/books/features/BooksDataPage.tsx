@@ -1,14 +1,20 @@
-import { BookDeleteDialog, BooksForm } from "@/features/books/features";
+import {
+  BookDeleteDialog,
+  BooksFilterDialog,
+  BooksForm,
+} from "@/features/books/features";
 import { Dialog, MainTable } from "@/shared/components";
 import FeatureHeader from "@/shared/components/FeatureHeader";
 import { useAuthStore, useDialogStore } from "@/stores";
 import { useBooksTable } from "../hooks";
-import { Loader } from "lucide-react";
+import { Filter, Loader } from "lucide-react";
 import type { BooksTableRow } from "../types";
 import { UserRoles } from "@/shared/types";
+import PrimaryButton from "@/shared/components/PrimaryButton";
 
 const BooksDataPage = () => {
   const { role } = useAuthStore();
+
   const {
     isOpenAdd,
     openEditId,
@@ -27,6 +33,12 @@ const BooksDataPage = () => {
     handleScroll,
     isFetchingNextPage,
     handleSearch,
+    handleChangeTempFilter,
+    handleFilter,
+    isOpenFilter,
+    tempFilters,
+    toggleOpenFilter,
+    isLoading,
   } = useBooksTable();
 
   return (
@@ -43,13 +55,27 @@ const BooksDataPage = () => {
       </Dialog>
       <Dialog
         isOpen={Boolean(openDeleteId)}
-        title={"Delete User"}
-        subTitle="The action cannot be undone, the user will be permenantly removed from your inventory."
+        title={"Delete Book"}
+        subTitle="The action cannot be undone, the book will be permenantly removed from your inventory."
         onClose={() => {
           changeOpenDelete(null);
         }}
       >
         <BookDeleteDialog />
+      </Dialog>
+      <Dialog
+        isOpen={isOpenFilter}
+        title={"Filter Books"}
+        subTitle="Filter books by these properties."
+        onClose={toggleOpenFilter}
+      >
+        <BooksFilterDialog
+          filters={tempFilters}
+          isLoading={isLoading}
+          onChangeFilter={handleChangeTempFilter}
+          onFilter={handleFilter}
+          toggleOpen={toggleOpenFilter}
+        />
       </Dialog>
       <FeatureHeader
         buttonTitle="Add Book"
@@ -64,7 +90,14 @@ const BooksDataPage = () => {
         title="Books"
         description={`Manage your books inventory (${totalBooks || 0} books)`}
       />
-
+      <div className="flex w-full justify-end">
+        <PrimaryButton
+          title={"Filter"}
+          icon={Filter}
+          onClick={toggleOpenFilter}
+          className="text-white px-10"
+        />
+      </div>
       <div
         className="w-full h-full overflow-auto"
         onScroll={handleScroll}

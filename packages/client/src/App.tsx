@@ -5,10 +5,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { useAuthStore } from "./stores";
 import { useEffect } from "react";
 import { getLsValue } from "./utils";
+import { useArchivingBooksNotification } from "./features/books/hooks/useArchivingBooksNotification";
 
 const AppRoutes = () => useRoutes(routes);
 
 function App() {
+  useArchivingBooksNotification();
   const { authenticate, unauthenticate } = useAuthStore();
   useEffect(() => {
     const token = getLsValue("token");

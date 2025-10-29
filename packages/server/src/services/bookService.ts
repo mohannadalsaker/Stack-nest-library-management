@@ -1,33 +1,72 @@
 import { Book } from "../models/Book";
-import { BookStatus } from "../types/bookTypes";
+import { BookStatus, type BookFilters } from "../types/bookTypes";
 import type {
   CreateBookInput,
   UpdateBookInput,
 } from "../validators/bookValidator";
+import { emailService } from "./emailService";
 
 export const getAllBooks = async ({
-  status,
   q,
   skip,
   limit,
+  ...filters
 }: {
-  status?: BookStatus;
   q: string;
   skip: number;
   limit: number;
-}) => {
-  const filterQuery = q
-    ? {
-        $or: [
-          { title: { $regex: q, $options: "i" } },
-          { author: { $regex: q, $options: "i" } },
-          { isbn: { $regex: q, $options: "i" } },
-        ],
-        ...(status ? { status } : {}),
-      }
-    : {};
+} & Partial<BookFilters>) => {
+  const filterQuery: Record<string, any> = {};
+
+  console.log("search is: ", q);
+
+  if (q) {
+    filterQuery.$or = [
+      { title: { $regex: q, $options: "i" } },
+      { author: { $regex: q, $options: "i" } },
+      { isbn: { $regex: q, $options: "i" } },
+    ];
+  }
+
+  // Apply filters dynamically
+  if (filters.category) {
+    filterQuery.category = filters.category;
+  }
+  if (filters.subCategory) {
+    filterQuery.subCategory = filters.subCategory;
+  }
+  if (filters.status) {
+    filterQuery.status = filters.status;
+  }
+  if (filters.rating) {
+    filterQuery.rating = { $gte: Number(filters.rating) };
+  }
+
+  // Quantity filters
+  const availableQtyRange: Record<string, number> = {};
+  if (filters.minAvailableQty) {
+    availableQtyRange.$gte = Number(filters.minAvailableQty);
+  }
+  if (filters.maxAvailableQty) {
+    availableQtyRange.$lte = Number(filters.maxAvailableQty);
+  }
+  if (Object.keys(availableQtyRange).length > 0) {
+    filterQuery.availableQuantity = availableQtyRange;
+  }
+
+  const totalQtyRange: Record<string, number> = {};
+  if (filters.minTotalQty) {
+    totalQtyRange.$gte = Number(filters.minTotalQty);
+  }
+  if (filters.maxTotalQty) {
+    totalQtyRange.$lte = Number(filters.maxTotalQty);
+  }
+  if (Object.keys(totalQtyRange).length > 0) {
+    filterQuery.totalQuantity = totalQtyRange;
+  }
+
   const [books, total] = await Promise.all([
-    Book.find()
+    Book.find(filterQuery)
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 })
@@ -53,7 +92,17 @@ export const findBookById = async (id: string) => {
 export const createBook = async (bookData: CreateBookInput) => {
   const newBook = new Book(bookData);
   const savedBook = await newBook.save();
-  return await savedBook.populate(["category", "subCategory"]);
+  await savedBook.populate(["category", "subCategory"]);
+  try {
+    await emailService.sendNewBookNotification(
+      savedBook.title,
+      "Library System"
+    );
+  } catch (emailError) {
+    console.error("Failed to send notification email:", emailError);
+  }
+
+  return savedBook;
 };
 
 export const updateBook = async ({

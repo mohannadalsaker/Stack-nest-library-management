@@ -10,6 +10,7 @@ export interface BooksData {
   author: string;
   rating: number;
   isbn: string;
+  coverImage?: string;
   category: {
     _id: string;
     name: string;
@@ -33,6 +34,7 @@ export interface BooksTableRow {
   title: string;
   author: string;
   status: BookStatus;
+  image?: string;
   category: string;
   subCategory: string;
   isbn: string;
@@ -52,3 +54,17 @@ export enum BookStatus {
   archived = "ARCHIVED",
   available = "AVAILABLE",
 }
+
+export interface BookFilters {
+  category: string;
+  subCategory: string;
+  minAvailableQty: string;
+  minTotalQty: string;
+  maxAvailableQty: string;
+  maxTotalQty: string;
+  status: BookStatus;
+  rating: string;
+}
+
+export interface ArchivingBooksData
+  extends Omit<BooksData, "category" | "subCategory"> {}

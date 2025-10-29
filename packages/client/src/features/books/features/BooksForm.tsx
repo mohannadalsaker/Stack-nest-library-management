@@ -1,13 +1,20 @@
-import { SelectInput, TextAreaField, TextField } from "@/shared/components";
+import {
+  ImageUploadInput,
+  SelectInput,
+  TextAreaField,
+  TextField,
+} from "@/shared/components";
 import PrimaryButton from "@/shared/components/PrimaryButton";
 import { Loader } from "@/shared/ui";
 import { useBookForm } from "../hooks";
+import { getFileUrl } from "@/utils";
 
 const BooksForm = () => {
   const {
     sendForm,
     closeDialog,
     register,
+    setValue,
     errors,
     isLoadingBook,
     isCreating,
@@ -17,6 +24,8 @@ const BooksForm = () => {
     isLoadingCategories,
     isLoadingSubCategories,
     subCategories,
+    control,
+    data,
   } = useBookForm();
 
   if (isLoadingBook) return <Loader />;
@@ -24,6 +33,14 @@ const BooksForm = () => {
   return (
     <form onSubmit={sendForm}>
       <div className="flex flex-col gap-6">
+        <ImageUploadInput
+          control={control}
+          name="coverImage"
+          setValue={setValue}
+          label="Cover image"
+          error={errors.coverImage?.message as string}
+          defaultImage={getFileUrl(data?.coverImage)}
+        />
         <div className="flex flex-col gap-4">
           <div className="flex gap-6">
             <TextField

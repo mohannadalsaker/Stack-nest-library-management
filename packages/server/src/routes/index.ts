@@ -4,6 +4,7 @@ import { authRoutes } from "./authRoutes";
 import { bookRoutes } from "./bookRoutes";
 import { categoryRoutes } from "./categoryRoutes";
 import { subCategoryRoutes } from "./subCategoryRoutes";
+import { notificationRoutes } from "./notificationRoutes";
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use("/auth", authRoutes);
 router.use("/books", bookRoutes);
 router.use("/category", categoryRoutes);
 router.use("/subCategory", subCategoryRoutes);
+router.use("/notification", notificationRoutes);
 
 export { router as apiRoutes };

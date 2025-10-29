@@ -21,7 +21,7 @@ const BookDeleteDialog = () => {
           onClick={() => changeOpenDelete(null)}
         />
         <PrimaryButton
-          title="Delete User"
+          title="Delete Book"
           className="text-white bg-[url('')] bg-red-500"
           isLoading={isPending}
           onClick={() =>

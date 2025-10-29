@@ -3,6 +3,7 @@ import { UserInfo } from "@/features/navbar/components";
 import { ChevronLeft } from "lucide-react";
 import { SideBarItem } from "../components";
 import { useSideBar } from "../hooks/useSideBar";
+import { useAuthStore } from "@/stores";
 
 const SideBar = ({
   isOpen,
@@ -11,6 +12,7 @@ const SideBar = ({
   isOpen: boolean;
   toggleOpen: () => void;
 }) => {
+  const { role } = useAuthStore();
   const { sideBarItems } = useSideBar();
   return (
     <aside className={`flex flex-col gap-3 h-full sm:static fixed z-20`}>
@@ -30,7 +32,7 @@ const SideBar = ({
             />
             <div className="flex flex-col">
               <h4 className="text-white font-semibold">StackNest</h4>
-              <p className="text-secondary-text text-sm">Dashboard</p>
+              <p className="text-secondary-text text-sm">{role}</p>
             </div>
           </div>
           <ChevronLeft

@@ -9,19 +9,19 @@ const envSchema = z.object({
     .default("development"),
 });
 
-const env = envSchema.parse(process.env);
+const env = envSchema.parse(Bun.env);
 
 export const config = {
-  port: process.env.PORT || 5000,
-  mongodbUri: process.env.MONGODB_URI!,
-  jwtSecret: process.env.JWT_SECRET!,
-  nodeEnv: process.env.NODE_ENV || "development",
+  port: env.PORT || 5000,
+  mongodbUri: env.MONGODB_URI!,
+  jwtSecret: env.JWT_SECRET!,
+  nodeEnv: env.NODE_ENV || "development",
 
   // Validate required environment variables
   validate: () => {
     const required = ["MONGODB_URI", "JWT_SECRET"];
     required.forEach((key) => {
-      if (!process.env[key]) {
+      if (!Bun.env[key]) {
         throw new Error(`Missing required environment variable: ${key}`);
       }
     });

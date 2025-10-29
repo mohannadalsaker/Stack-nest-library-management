@@ -22,7 +22,7 @@ export const findSubCategories = async ({
       }
     : {};
   const [subCategories, total] = await Promise.all([
-    SubCategory.find()
+    SubCategory.find(filterQuery)
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 })

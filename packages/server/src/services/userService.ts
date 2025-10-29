@@ -22,7 +22,7 @@ export const getUsers = async ({
       }
     : {};
   const [users, total] = await Promise.all([
-    User.find()
+    User.find(searchFilter)
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 })

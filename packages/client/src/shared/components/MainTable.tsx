@@ -1,4 +1,6 @@
+import { getFileUrl } from "@/utils";
 import type { MainTableAction, MainTableColumn } from "../types";
+import { ImageIcon } from "lucide-react";
 
 export interface MainTableProps<T extends { id: string }> {
   data: T[];
@@ -35,7 +37,25 @@ const MainTable = <T extends { id: string }>({
           <tr key={row.id} className="border-b border-b-secondary-text">
             {columns.map((col) => (
               <td key={col.key as string} className="p-3 text-nowrap">
-                {col.format ? col.format(row) : (row[col.key] as string)}
+                {col.key === "image" ? (
+                  row[col.key] ? (
+                    <img
+                      src={getFileUrl(row[col.key] as string)}
+                      width={"40px"}
+                      height={"50px"}
+                      className="mx-auto object-cover"
+                      crossOrigin="anonymous"
+                    />
+                  ) : (
+                    <ImageIcon
+                      width={"40px"}
+                      height={"50px"}
+                      className="mx-auto"
+                    />
+                  )
+                ) : (
+                  (row[col.key] as string)
+                )}
               </td>
             ))}
             {actions && actions.length > 0 && (

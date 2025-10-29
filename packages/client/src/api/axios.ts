@@ -1,8 +1,9 @@
 import { getLsValue } from "@/utils";
 import axios from "axios";
+import { config } from "@/config/env";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: `${config.VITE_BASE_URL}/api`,
   timeout: 10000,
 });
 
