@@ -7,19 +7,21 @@ const UserInfo = () => {
     useNavbar();
 
   return (
-    <div className="flex gap-4 relative items-center" ref={menuRef}>
+    <div className="flex gap-4 relative items-center flex-wrap" ref={menuRef}>
       <span className="p-2 bg-primary-gradient rounded-full">
         <User size={20} color="white" />
       </span>
-      <div className="flex flex-col">
+      <div className="flex flex-col w-[50%] grow">
         {isLoading ? (
           <Loader />
         ) : (
           <>
-            <h4 className="text-primary-text font-semibold">
+            <h4 className="text-primary-text font-semibold w-fit">
               {profile?.username}
             </h4>
-            <h6 className="text-sm text-secondary-text">{profile?.email}</h6>
+            <h6 className="text-sm text-secondary-text w-full text-ellipsis overflow-hidden">
+              {profile?.email}
+            </h6>
           </>
         )}
       </div>

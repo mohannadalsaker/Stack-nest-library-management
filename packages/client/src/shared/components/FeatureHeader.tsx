@@ -24,7 +24,7 @@ const FeatureHeader = ({
 }: FeatureHeaderProps) => {
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex justify-between flex-wrap items-center">
+      <div className="flex justify-between flex-wrap items-center gap-5">
         <div className="flex flex-col gap-2">
           <h1 className="font-bold text-4xl">{title}</h1>
           {description && <p className="text-secondary-text">{description}</p>}
